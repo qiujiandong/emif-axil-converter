@@ -22,7 +22,6 @@
 
 module emif2axil#(
     parameter AXIL_DW = 32,
-    parameter AXIL_AW = 4,
     parameter [23:0] EMIF_ADDR_BASE = 24'h000000,
     parameter [31:0] AXIL_ADDR_BASE = 32'h00000000,
     parameter AXIL_ADDR_WIDTH = 16 // 16 for 64kB, max is 25 for 32MB

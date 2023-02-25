@@ -1,5 +1,9 @@
 # EMIF to AXI-lite Converter
 
+## Vivado
+
+> 2019.2
+
 ## 背景
 
 DSP的EMIF与FPGA互连，但随着处理器的更新迭代，EMIF这种并行接口的频率很难再提高，数据传输的速率到达瓶颈，这一接口也慢慢地不怎么被用来传数据了，但是用它传控制命令还是很方便的。FPGA内的IP一般采用AXI-lite作为控制接口，所以就有了这个设计，将EMIF接口转换为AXI-lite master接口，让DSP能够更加方便地控制FPGA里的IP。这个IP适用于FT-M6678 DSP，其它带有EMIF接口的处理器可能需要做部分修改才能使用。
