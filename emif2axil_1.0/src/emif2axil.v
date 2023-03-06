@@ -121,6 +121,8 @@ module emif2axil#(
     wire [31:0] wr_data_dout;
     wire rd_fifo_wr_en;
 
+    reg busy_i;
+
     assign m_axil_awprot = 3'b0;
     assign m_axil_arprot = 3'b0;
     assign m_axil_wstrb = 4'hF;
@@ -134,7 +136,7 @@ module emif2axil#(
     assign wr_data_fifo_wr_en = wr_en && !emif_addr[AXIL_ADDR_WIDTH - 2] && (((~wr_mask) & emif_addr) == (EMIF_ADDR_BASE & (~wr_mask)));
     assign wr_data_fifo_rd_en = handshake_w;
     assign rd_fifo_wr_en = handshake_r;
-    assign busy = (!addr_fifo_empty) || (cstate != S_IDLE);
+    // assign busy = (!addr_fifo_empty) || (cstate != S_IDLE);
     assign wr_mask = 24'b0 | {(AXIL_ADDR_WIDTH - 1){1'b1}};
     assign addr_fifo_wr_en = (((~wr_mask) & emif_addr) == (EMIF_ADDR_BASE & (~wr_mask))) && wr_en;
     assign rd_fifo_rd_en = (((~wr_mask) & emif_addr) == (EMIF_ADDR_BASE & (~wr_mask))) && rd_en;
@@ -155,6 +157,17 @@ module emif2axil#(
     assign m_axil_arvalid = axil_arvalid;
     assign m_axil_araddr = axil_araddr;
     assign m_axil_rready = axil_rready;
+
+    assign busy = busy_i;
+
+    always@(posedge eclk or negedge nrst) begin
+        if(!nrst) begin
+            busy_i <= 1'b0;
+        end 
+        else begin
+            busy_i <= (!addr_fifo_empty) || (cstate != S_IDLE);
+        end
+    end
 
     // cstate
     always @(posedge eclk or negedge nrst) begin
